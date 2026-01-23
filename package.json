@@ -18,6 +18,11 @@
   },
   "homepage": "https://github.com/ayushsinghh0/aegisid-auth-server#readme",
   "dependencies": {
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.69.0",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.211.0",
+    "@opentelemetry/sdk-node": "^0.211.0",
+    "@opentelemetry/sdk-trace-base": "^2.5.0",
     "dotenv": "^17.2.3",
     "express": "^5.2.1"
   },
