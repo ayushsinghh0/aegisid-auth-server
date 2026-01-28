@@ -1,18 +1,16 @@
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
-import { ConsoleSpanExporter, SimpleSpanProcessor } from "@opentelemetry/sdk-trace-base";
+import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
 
-const sdk = new NodeSDK({
-  spanProcessor: new SimpleSpanProcessor(new ConsoleSpanExporter()),
-  instrumentations: [getNodeAutoInstrumentations()],
+const traceExporter = new OTLPTraceExporter({
+  url: "http://localhost:4318/v1/traces"
 });
 
-export async function startTelemetry() {
-  await sdk.start();
-  console.log("✅ OpenTelemetry started");
-}
+const sdk = new NodeSDK({
+  traceExporter,
+  instrumentations: [getNodeAutoInstrumentations()]
+});
 
-export async function stopTelemetry() {
-  await sdk.shutdown();
-  console.log("🛑 OpenTelemetry stopped");
-}
+sdk.start();
+
+console.log("OpenTelemetry initialized");
