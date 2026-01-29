@@ -1,0 +1,32 @@
+{
+  "name": "aegisid-auth-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": { 
+    "build": "tsc -b",
+    "dev": "tsx src/server.ts",
+    "start": "node dist/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ayushsinghh0/aegisid-auth-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ayushsinghh0/aegisid-auth-server/issues"
+  },
+  "homepage": "https://github.com/ayushsinghh0/aegisid-auth-server#readme",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.1.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
+  }
+}
