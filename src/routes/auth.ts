@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { registerSchema, loginSchema } from "../validators/auth.schema";
 import { registerUser, loginUser } from "../services/auth.service";
+import { sign } from "node:crypto";
+import { signAccessToken } from "../utils/jwt";
 
 const router = Router();
 
@@ -25,9 +27,9 @@ router.post("/login",async (req,res)=>{
 
         const user = await loginUser(data.email,data.password);
 
+        const accessToken= await signAccessToken(user.id);
         res.json({
-            id:user.id,
-            email:user.email
+            accessToken
         });
     }
     catch (err:any){

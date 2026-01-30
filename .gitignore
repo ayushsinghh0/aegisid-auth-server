@@ -4,3 +4,4 @@ dist/
 tsconfig.tsbuildinfo
 
 /src/generated/prisma
+keys/
