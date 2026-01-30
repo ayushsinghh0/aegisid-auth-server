@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc -b",
-    "dev": "tsc -b && node dist/server.js",
+    "dev": "tsc -b && node dist/index.js",
     "start": "node dist/server.js"
   },
   "repository": {
@@ -23,9 +23,14 @@
     "@opentelemetry/auto-instrumentations-node": "^0.69.0",
     "@opentelemetry/exporter-trace-otlp-http": "^0.211.0",
     "@opentelemetry/sdk-node": "^0.211.0",
-    "express": "^5.2.1"
+    "@prisma/client": "^7.3.0",
+    "@prisma/extension-accelerate": "^3.0.1",
+    "bcrypt": "^6.0.0",
+    "express": "^5.2.1",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
     "@types/node": "^25.1.0",
     "dotenv": "^17.2.3",
