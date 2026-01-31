@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { prisma } from "../db/prisma";
 import { randomBytes } from "node:crypto";
-import { createAuthorizationCode } from "../services/oauth.services";
+import { createAuthorizationCode, exchangeCodeforToken } from "../services/oauth.services";
 import { authenticate } from "../middleware/auth";
 
 
@@ -64,5 +64,41 @@ router.get("/authorize",authenticate,async (req,res)=>{
 
 });
 
+router.post("/token",authenticate,async (req,res)=>{
+    const {
+        code,code_verifier,client_id,grant_type
+    }= req.body;
+
+    if(grant_type!=="authorization_code"){
+        return res.status(400).json({ error: "Invalid grant_type"});
+    }
+
+    if(!code || !code_verifier || !client_id) {
+        return res.status(400).json({
+            error:"Missing parameters"
+        });
+    }
+
+    try {
+        const token =  await exchangeCodeforToken(
+            code,code_verifier,client_id
+        );
+
+        res.json({
+            access_token:token.accessToken,
+            refreshe_token: token.refreshToken,
+            token_type:"Bearer",
+            expires_in: 900
+        });
+
+
+    }
+    catch(err: any){
+        res.status(400).json({
+            error:err.message
+        });
+    }
+    
+})
 
 export default router;
