@@ -73,6 +73,15 @@ export async function exchangeCodeforToken(
         throw new Error("User not found");
     }
 
+    await prisma.refreshToken.updateMany({
+        where:{
+            userId: authCode.userId,
+            clientId,
+            revoked:false
+        },
+        data: {revoked:true}
+    });
+
     const accessToken= await signAccessToken(authCode.userId);
 
     const idToken = await signIdToken(user);
