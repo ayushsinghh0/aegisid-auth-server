@@ -2,6 +2,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { prisma } from "../db/prisma";
 import { v4 as uuidv4 } from "uuid";
 import { signAccessToken } from "../utils/jwt";
+import { signIdToken } from "./jwks.service";
 
 
 export async function createAuthorizationCode(
@@ -64,7 +65,17 @@ export async function exchangeCodeforToken(
         where: {code}
     })
 
+    const user = await prisma.user.findUnique({
+        where: { id: authCode.userId}
+    });
+
+    if(!user){
+        throw new Error("User not found");
+    }
+
     const accessToken= await signAccessToken(authCode.userId);
+
+    const idToken = await signIdToken(user);
 
 
     const refreshToken = randomUUID();
@@ -86,6 +97,7 @@ export async function exchangeCodeforToken(
 
     return {
         accessToken,
+        idToken,
         refreshToken
     }
 

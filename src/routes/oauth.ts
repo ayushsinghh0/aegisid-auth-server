@@ -87,6 +87,7 @@ router.post("/token",authenticate,async (req,res)=>{
         res.json({
             access_token:token.accessToken,
             refreshe_token: token.refreshToken,
+            id_token:token.idToken,
             token_type:"Bearer",
             expires_in: 900
         });

@@ -4,7 +4,7 @@ import authRouter from "./routes/auth";
 import profileRouter from "./routes/profile";
 import oauthRouter from "./routes/oauth";
 import wellKnownRouter from "./routes/wellknown";
-
+import  userInfoRouter from "./routes/userinfo";
 export function createApp(){
     const app=express();
 
@@ -15,6 +15,7 @@ export function createApp(){
     app.use("/profile",profileRouter);
     app.use("/oauth",oauthRouter);
     app.use("/.well-known",wellKnownRouter);
+    app.use("/userinfo",userInfoRouter);
 
     return app;
 }

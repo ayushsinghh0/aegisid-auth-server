@@ -4,11 +4,11 @@ import path from "path";
 
 import { createPrivateKey, createPublicKey } from "node:crypto";
 
-const privateKey = createPrivateKey(
+ const privateKey = createPrivateKey(
   readFileSync(path.join(process.cwd(), "keys/private.pem"))
 );
 
-const publicKey = createPublicKey(
+ const publicKey = createPublicKey(
   readFileSync(path.join(process.cwd(), "keys/public.pem"))
 );
 
