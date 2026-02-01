@@ -3,6 +3,7 @@ import { prisma } from "../db/prisma";
 import { v4 as uuidv4 } from "uuid";
 import { signAccessToken } from "../utils/jwt";
 import { signIdToken } from "./jwks.service";
+import { redis } from "../cache/redis";
 
 
 export async function createAuthorizationCode(
@@ -14,15 +15,17 @@ export async function createAuthorizationCode(
 
   const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 min
 
-  await prisma.authorizationCode.create({
-    data: {
-      code,
-      userId,
-      clientId,
-      codeChallenge,
-      expiresAt
-    }
-  });
+  await redis.set(
+    `auth_code:${code}`,
+    JSON.stringify({
+        userId,
+        clientId,
+        codeChallenge,
+        expiresAt: expiresAt.toISOString()
+    }),
+    "EX",
+    300
+  )
 
   return code;
 }
@@ -38,15 +41,19 @@ export async function exchangeCodeforToken(
 
     //findcode
 
-    const authCode =  await prisma.authorizationCode.findUnique({
-        where: {code}
-    });
+   const raw  = await redis.get(`auth_code: ${code}`);
+
+   if(!raw) {
+    throw new Error ("Invalid or expired code")
+   }
+
+   const authCode = JSON.parse(raw);
 
     if(!authCode){
         throw new Error("Invalid code");
     }
 
-    if(authCode.expiresAt<new Date()){
+    if(new Date(authCode.expiresAt)<new Date()){
         throw new Error("code expired");
      }
 
@@ -61,9 +68,7 @@ export async function exchangeCodeforToken(
         throw new Error("Invalid PKCE verifier");
     }
 
-    await prisma.authorizationCode.delete({
-        where: {code}
-    })
+    await redis.del(`auth_code: ${code}`);
 
     const user = await prisma.user.findUnique({
         where: { id: authCode.userId}
